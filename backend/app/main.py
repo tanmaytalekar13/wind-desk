@@ -47,7 +47,11 @@ async def serve_root():
 
 @app.get("/{full_path:path}", include_in_schema=False)
 async def serve_spa_or_static(full_path: str):
-    if full_path.startswith("api/") or full_path.startswith("docs") or full_path.startswith("openapi"):
+    if (
+        full_path.startswith("api/")
+        or full_path.startswith("docs")
+        or full_path.startswith("openapi")
+    ):
         return JSONResponse(status_code=404, content={"detail": "Not Found"})
     if static_dir:
         target = static_dir / full_path
