@@ -58,3 +58,28 @@ def test_accuracy_endpoints(store):
 def test_vintages(store):
     j = c.get("/api/forecast-vintages", params={"target_date": "2026-01-10"}).json()
     assert len(j["vintages"]) > 1 and len(j["actual"]) == 48
+
+
+def test_vercel_middleware(store):
+    import sys
+    from pathlib import Path
+
+    root_dir = str(Path(__file__).resolve().parents[2])
+    if root_dir not in sys.path:
+        sys.path.insert(0, root_dir)
+    from api.index import app as vercel_app
+
+    vc = TestClient(vercel_app)
+
+    # Simulated Vercel rewrite with x-matched-path header
+    r_health = vc.get("/api/index.py", headers={"x-matched-path": "/api/health"})
+    assert r_health.status_code == 200
+    assert r_health.json() == {"status": "ok"}
+
+    # Simulated Vercel rewrite with query params in x-matched-path
+    r_dec = vc.get(
+        "/api/index.py",
+        headers={"x-matched-path": "/api/decision-forecast?decision_date=2026-01-10"},
+    )
+    assert r_dec.status_code == 200
+    assert r_dec.json()["delivery_date"] == "2026-01-11"
