@@ -1,16 +1,16 @@
 import logging
+from pathlib import Path
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-
-from pathlib import Path
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, JSONResponse
 
 from app.api.routes import router
 from app.config import settings
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("wind-desk")
+
 app = FastAPI(title="Wind Day-Ahead Desk API", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
@@ -28,8 +28,6 @@ async def no_snapshot(_: Request, exc: FileNotFoundError):
     )
 
 
-from fastapi.responses import FileResponse, JSONResponse
-
 # Locate static directory robustly across local, docker, and serverless environments
 candidates = [
     Path(__file__).resolve().parents[1] / "static",
@@ -37,7 +35,6 @@ candidates = [
     Path(__file__).resolve().parents[2] / "backend" / "static",
 ]
 static_dir = next((c for c in candidates if c.is_dir() and (c / "index.html").exists()), None)
-logger = logging.getLogger("wind-desk")
 logger.info("Resolved frontend static directory: %s", static_dir)
 
 
@@ -60,5 +57,3 @@ async def serve_spa_or_static(full_path: str):
         if index.exists():
             return FileResponse(index)
     return JSONResponse(status_code=404, content={"detail": "Not Found"})
-
-
