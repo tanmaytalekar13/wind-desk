@@ -1,0 +1,23 @@
+:root { --bg:#f5f7fa; --card:#fff; --ink:#14202e; --mute:#5b6b7c; --acc:#0b6bcb; --line:#e1e6ec; }
+* { box-sizing: border-box; } body { margin:0; font-family: system-ui, sans-serif; background:var(--bg); color:var(--ink); }
+header { background:#0d2238; color:#fff; padding:14px 24px; } header h1 { margin:0; font-size:20px; }
+header p { margin:2px 0 0; font-size:13px; opacity:.75; }
+nav { display:flex; gap:4px; padding:0 24px; background:#fff; border-bottom:1px solid var(--line); overflow-x:auto; }
+nav button { border:0; background:none; padding:12px 16px; cursor:pointer; font-size:14px; color:var(--mute); border-bottom:3px solid transparent; }
+nav button.on { color:var(--acc); border-color:var(--acc); font-weight:600; }
+main { max-width:1200px; margin:0 auto; padding:20px 24px 60px; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:16px; }
+.card h3 { margin:0 0 10px; font-size:15px; }
+.row { display:flex; gap:12px; flex-wrap:wrap; align-items:end; margin-bottom:16px; }
+.row label { display:flex; flex-direction:column; font-size:12px; color:var(--mute); gap:4px; }
+input, select { padding:7px 9px; border:1px solid var(--line); border-radius:6px; font-size:14px; }
+.kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:16px; }
+.kpi { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px; }
+.kpi span { font-size:12px; color:var(--mute); cursor:help; border-bottom:1px dotted var(--mute); } .kpi b { display:block; font-size:22px; margin-top:4px; }
+.grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(380px,1fr)); gap:16px; }
+table { width:100%; border-collapse:collapse; font-size:13px; } th,td { text-align:right; padding:5px 8px; border-bottom:1px solid var(--line); } th:first-child,td:first-child { text-align:left; }
+.scroll { max-height:380px; overflow:auto; }
+.insight { background:#eaf3ff; border-left:4px solid var(--acc); padding:12px 14px; border-radius:6px; margin-bottom:16px; }
+.err { color:#b00020; background:#fdecea; padding:10px; border-radius:6px; } .muted { color:var(--mute); }
+button.primary { background:var(--acc); color:#fff; border:0; padding:8px 14px; border-radius:6px; cursor:pointer; }
+footer { text-align:center; font-size:12px; color:var(--mute); padding:20px; }
