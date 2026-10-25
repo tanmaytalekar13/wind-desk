@@ -1,10 +1,11 @@
-"""Vercel serverless entry: exposes the FastAPI ASGI app."""
-
+import logging
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
 from app.main import app as base_app  # noqa: E402
+
+logger = logging.getLogger("wind-desk.vercel")
 
 
 class VercelPathMiddleware:
@@ -24,6 +25,7 @@ class VercelPathMiddleware:
                 b"x-vercel-matched-path"
             )
             raw_path = scope.get("path", "")
+            logger.info("VERCEL ASGI: path=%r, matched=%r", raw_path, matched)
             if matched:
                 matched_str = matched.decode("utf-8", errors="ignore")
                 if matched_str and not matched_str.startswith("/api/index"):
