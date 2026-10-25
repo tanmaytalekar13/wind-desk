@@ -9,6 +9,12 @@ def test_health(store):
     assert c.get("/api/health").json() == {"status": "ok"}
 
 
+def test_frontend_root():
+    r = c.get("/")
+    assert r.status_code == 200
+    assert '<div id="root">' in r.text
+
+
 def test_meta(store):
     j = c.get("/api/meta").json()
     assert "Elexon" in j["attribution"] and j["default_cutoff"] == "09:00"
