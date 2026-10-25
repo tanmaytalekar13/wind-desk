@@ -2,7 +2,7 @@
 
 Web app for a GB utility's day-ahead power-buying team. Using only Elexon national wind data it (1) shows the **latest wind forecast available at the day-ahead decision cut-off** and (2) quantifies **forecast accuracy** so traders can size a buffer. Scope: decisions made in January 2026 (delivery Jan 2 - Feb 1).
 
-- Deployed app: TODO_LINK
+- Deployed app: https://wind-desk.vercel.app/
 - Video: TODO_VIDEO_LINK
 
 ## Layout
