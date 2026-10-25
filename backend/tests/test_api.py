@@ -13,6 +13,8 @@ def test_frontend_root():
     r = c.get("/")
     assert r.status_code == 200
     assert '<div id="root">' in r.text
+    r_css = c.get("/assets/index-Dq3_hCNy.css")
+    assert r_css.status_code == 200
 
 
 def test_meta(store):

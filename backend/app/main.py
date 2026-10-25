@@ -28,10 +28,37 @@ async def no_snapshot(_: Request, exc: FileNotFoundError):
     )
 
 
-static_dir = Path(__file__).resolve().parents[1] / "static"
-if not static_dir.exists():
-    static_dir = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+from fastapi.responses import FileResponse, JSONResponse
 
-if static_dir.exists():
-    app.mount("/", StaticFiles(directory=str(static_dir), html=True), name="frontend")
+# Locate static directory robustly across local, docker, and serverless environments
+candidates = [
+    Path(__file__).resolve().parents[1] / "static",
+    Path(__file__).resolve().parents[2] / "frontend" / "dist",
+    Path(__file__).resolve().parents[2] / "backend" / "static",
+]
+static_dir = next((c for c in candidates if c.is_dir() and (c / "index.html").exists()), None)
+logger = logging.getLogger("wind-desk")
+logger.info("Resolved frontend static directory: %s", static_dir)
+
+
+@app.get("/", include_in_schema=False)
+async def serve_root():
+    if static_dir and (static_dir / "index.html").exists():
+        return FileResponse(static_dir / "index.html")
+    return JSONResponse({"status": "ok", "message": "Wind Desk API running"})
+
+
+@app.get("/{full_path:path}", include_in_schema=False)
+async def serve_spa_or_static(full_path: str):
+    if full_path.startswith("api/") or full_path.startswith("docs") or full_path.startswith("openapi"):
+        return JSONResponse(status_code=404, content={"detail": "Not Found"})
+    if static_dir:
+        target = static_dir / full_path
+        if target.is_file():
+            return FileResponse(target)
+        index = static_dir / "index.html"
+        if index.exists():
+            return FileResponse(index)
+    return JSONResponse(status_code=404, content={"detail": "Not Found"})
+
 
